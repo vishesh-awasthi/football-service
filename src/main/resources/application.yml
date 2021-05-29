@@ -1,0 +1,9 @@
+server:
+  port: ${PORT:8080}
+  context-path: ${CONTEXT_PATH:/football-service}
+
+api:
+  base:
+    url: ${API_BASE_URL}
+  secret:
+    key: ${API_SECRET_KEY}
