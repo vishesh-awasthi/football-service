@@ -1,0 +1,66 @@
+# Config map for country-service
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: football-service-config
+data:
+  context-path: "/football-service"
+  api-base-url: "https://apiv3.apifootball.com"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: football-service-deployment
+  labels:
+    run: football-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: football-service
+  template:
+    metadata:
+      labels:
+        run: footbal-service
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: football-service-config
+      containers:
+        - name: football-service
+          image: visheshawasthi/football-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: football-service-config
+                  key: state-service-host
+            - name: API_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: football-service-secret
+                    key: api-secret-key
+            - name: CONTEXT-PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: football-service-config
+                  key: context-path
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: football-service
+spec:
+  selector:
+    run: football-service
+  ports:
+    - name: port1
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: NodePort
