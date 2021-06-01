@@ -30,10 +30,9 @@ public class AbstractTeamService {
      * @param action represents the type of action required
      * @return {@link HttpHeaders}
      */
-    protected HttpHeaders getBaseHeaders(String action, String apiSecretKey) {
+    public HttpHeaders getBaseHeaders(String action) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("action", action);
-        headers.add("APIkey", apiSecretKey);
         return headers;
     }
 }
