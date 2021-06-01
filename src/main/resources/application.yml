@@ -1,6 +1,7 @@
 server:
   port: ${PORT:8080}
-  context-path: ${CONTEXT_PATH:/football-service}
+  servlet:
+    context-path: ${CONTEXT_PATH:/football-service}
 
 api:
   base:
