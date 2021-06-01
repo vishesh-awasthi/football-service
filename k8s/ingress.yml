@@ -10,6 +10,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: footabll-service
+                name: football-service
                 port:
                   number: 8080

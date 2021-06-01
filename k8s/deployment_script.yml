@@ -6,6 +6,7 @@ metadata:
 data:
   context-path: "/football-service"
   api-base-url: "https://apiv3.apifootball.com"
+  api-secret-key: "9bb66184e0c8145384fd2cc0f7b914ada57b4e8fd2e4d6d586adcc27c257a978"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,7 +22,7 @@ spec:
   template:
     metadata:
       labels:
-        run: footbal-service
+        run: football-service
     spec:
       volumes:
         - name: config-volume
@@ -29,8 +30,15 @@ spec:
             name: football-service-config
       containers:
         - name: football-service
-          image: visheshawasthi/football-service
+          image: visheshawasthi/football-service-with-jib
           imagePullPolicy: Always
+#          resources:
+#            requests:
+#              memory: "64Mi"
+#              cpu: "250m"
+#            limits:
+#              memory: "128Mi"
+#              cpu: "300m"
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -39,12 +47,12 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: football-service-config
-                  key: state-service-host
+                  key: api-base-url
             - name: API_SECRET_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: football-service-secret
-                    key: api-secret-key
+              valueFrom:
+                configMapKeyRef: #we have to use secret map here instead of config map
+                  name: football-service-config
+                  key: api-secret-key
             - name: CONTEXT-PATH
               valueFrom:
                 configMapKeyRef:
