@@ -8,13 +8,13 @@ pipeline {
         stage('Checkout and Build') {
             steps {
                 git 'https://github.com/vishesh-awasthi/football-service.git'
-                sh "/opt/apache-maven-3.6.3/bin/mvn -DskipTests clean install"
+                sh "mvn -DskipTests clean install"
             }
         }
         stage('Build Docker Image and Push') {
             steps {
                 script {
-                    docker.withRegistery('', registryCredential) {
+                    docker.withRegistry('', registryCredential) {
                         def image = docker.build registry
                         image.push()
                     }
